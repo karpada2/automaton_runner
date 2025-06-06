@@ -7,7 +7,7 @@ public class DeterministicRegularAutomaton extends DeterministicAutomaton {
     private State startState;
     // the starting state
 
-    private Map<State, Map<String, State>> connections;
+    private Map<State, Map<String, State>> transitions;
     // each state is a key for a map that describes it's connections,
     // such that for a letter P and state S, connections.get(S).get(P) is the state that's connected by P
 
@@ -33,14 +33,14 @@ public class DeterministicRegularAutomaton extends DeterministicAutomaton {
         this.startState = startState;
 
         State[] givenStates = states.toArray(new State[]{});
-        connections = new HashMap<>(givenStates.length);
+        transitions = new HashMap<>(givenStates.length);
         for (int i = 0; i < givenStates.length; i++) {
-            connections.put(givenStates[i], new HashMap<>(alphabet.size()));
+            transitions.put(givenStates[i], new HashMap<>(alphabet.size()));
         }
 
         for (int i = 0; i < connects.length; i++) {
             for (int j = 0; j < lettersOfConnects[i].length; j++) {
-                connections.get(connects[i][0]).put(lettersOfConnects[i][j], connects[i][1]);
+                transitions.get(connects[i][0]).put(lettersOfConnects[i][j], connects[i][1]);
             }
         }
     }
@@ -80,8 +80,8 @@ public class DeterministicRegularAutomaton extends DeterministicAutomaton {
         runOrder[0] = startState;
 
         for (int i = 0; i < word.length; i++) {
-            if (connections.get(runOrder[i]).get(word[i]) != null) {
-                runOrder[i+1] = connections.get(runOrder[i]).get(word[i]);
+            if (transitions.get(runOrder[i]).get(word[i]) != null) {
+                runOrder[i+1] = transitions.get(runOrder[i]).get(word[i]);
             }
             else {
                 break;
