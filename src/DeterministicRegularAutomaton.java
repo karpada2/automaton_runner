@@ -50,25 +50,6 @@ public class DeterministicRegularAutomaton extends DeterministicAutomaton {
     }
 
     @Override
-    public boolean checkWord(String[] word) {
-        State[] runOrder = getRunOrder(word);
-        return runOrder.length - 1 == word.length &&
-                    !Arrays.asList(runOrder).contains(null) &&
-                    runOrder[runOrder.length-1].isAccepting();
-    }
-
-    @Override
-    public State getFinishingState(String[] word) {
-        State[] runOrder = getRunOrder(word);
-        for (int i = 1; i < runOrder.length-1; i++) {
-            if (runOrder[i] == null) {
-                return runOrder[i+1];
-            }
-        }
-        return null;
-    }
-
-    @Override
     public State[] getRunOrder(String[] word) {
         if (!isValidWord(word)) {
             throw new IllegalArgumentException("Word is not in the alphabet of this automaton!");
