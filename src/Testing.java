@@ -1,10 +1,123 @@
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 public class Testing {
     public static void main(String[] args) {
+        DeterministicAutomaton moreAThanB = moreAThanB();
+
+        System.out.println(moreAThanB.checkWord(toStringArray("aba")));
+        System.out.println(moreAThanB.checkWord(toStringArray("a")));
+        System.out.println(moreAThanB.checkWord(toStringArray("aaa")));
+        System.out.println(moreAThanB.checkWord(toStringArray("abb")));
+        System.out.println(moreAThanB.checkWord(toStringArray("abba")));
+        System.out.println(moreAThanB.checkWord(toStringArray("abaaba")));
+    }
+
+    public static DeterministicStackAutomaton moreAThanB() {
+        Set<String> alphabet = new HashSet<>(Arrays.asList(new String[]{"a", "b"}));
+        State startState = new State(false);
+        State[] states = {
+                startState,
+                new State(true),
+                new State(false)
+        };
+
+        String[] pushA = {"A"};
+        String[] pushB = {"B"};
+
+        String emptyStack = DeterministicStackAutomaton.StackInput.EMPTY_STACK;
+
+        DeterministicStackAutomaton.StackConnection[] connections = {
+                new DeterministicStackAutomaton.StackConnection(
+                        states[0],
+                        states[1],
+                        "a",
+                        emptyStack,
+                        pushA,
+                        false
+                ),
+
+
+                new DeterministicStackAutomaton.StackConnection(
+                        states[1],
+                        states[1],
+                        "a",
+                        "A",
+                        pushA,
+                        false
+                ),
+                new DeterministicStackAutomaton.StackConnection(
+                        states[1],
+                        states[1],
+                        "a",
+                        emptyStack,
+                        pushA,
+                        false
+                ),
+                new DeterministicStackAutomaton.StackConnection(
+                        states[1],
+                        states[1],
+                        "b",
+                        "A",
+                        pushA,
+                        true
+                ),
+
+
+                new DeterministicStackAutomaton.StackConnection(
+                        states[1],
+                        states[2],
+                        "b",
+                        emptyStack,
+                        pushB,
+                        false
+                ),
+
+
+                new DeterministicStackAutomaton.StackConnection(
+                        states[2],
+                        states[2],
+                        "b",
+                        "B",
+                        pushB,
+                        false
+                ),
+                new DeterministicStackAutomaton.StackConnection(
+                        states[2],
+                        states[2],
+                        "b",
+                        emptyStack,
+                        pushB,
+                        false
+                ),
+                new DeterministicStackAutomaton.StackConnection(
+                        states[2],
+                        states[2],
+                        "a",
+                        "B",
+                        pushA,
+                        true
+                ),
+
+
+                new DeterministicStackAutomaton.StackConnection(
+                        states[2],
+                        states[1],
+                        "a",
+                        emptyStack,
+                        pushA,
+                        false
+                ),
+        };
+
+        return new DeterministicStackAutomaton(
+                alphabet,
+                new HashSet<>(Arrays.asList(states)),
+                startState,
+                connections
+        );
+    }
+
+    public static DeterministicRegularAutomaton emailChecker() {
         Set<String> alphabet = new HashSet<>(Arrays.asList(new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "@", "."}));
         String[] letters = new String[]{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
         State startState = new State(false);
@@ -64,18 +177,12 @@ public class Testing {
                 ),
         };
 
-        DeterministicRegularAutomaton emailChecker = new DeterministicRegularAutomaton(
+        return new DeterministicRegularAutomaton(
                 alphabet,
                 new HashSet<>(Arrays.asList(states)),
                 startState,
                 connections
         );
-
-        System.out.println(emailChecker.checkWord(toStringArray("gongrossman@gmail.com")));
-        System.out.println(emailChecker.checkWord(toStringArray("g@g.g")));
-        System.out.println(emailChecker.checkWord(toStringArray("gongrossman@@gmail.com")));
-        System.out.println(emailChecker.checkWord(toStringArray("gon..grossman@gmail.com")));
-        System.out.println(emailChecker.checkWord(toStringArray("gongrossman@gmail..com")));
     }
 
     public static String[] toStringArray(String word) {
